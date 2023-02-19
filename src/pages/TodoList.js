@@ -1,5 +1,7 @@
+import React from "react";
 import styled from "styled-components";
 import useStore from "../store/store";
+import { shallow } from "zustand/shallow";
 
 const TodoList = () => {
   const {
@@ -8,11 +10,27 @@ const TodoList = () => {
     inputBox,
     addList,
     removeList,
-    editList,
     isEdit,
+    editList,
     editFinish,
-    editId,
-  } = useStore();
+  } = useStore(
+    (state) => ({
+      input: state.input,
+      setInput: state.setInput,
+      inputBox: state.inputBox,
+      addList: state.addList,
+      removeList: state.removeList,
+      isEdit: state.isEdit,
+      editList: state.editList,
+      editFinish: state.editFinish,
+    }),
+    shallow
+  );
+  // const { input } = useStore((state) => state.input)
+
+  // store를 통째로 가져오면 매번 다른값으로 인식해서 항상 렌더링
+  // shallow를 사용하면 이전값과 변경값을 비교하여 변화를 감지하고 렌더링
+  // selector 로 따로 빼주면 독립적으로 상태변경여부를 알수있어서 변화를 감지하고 렌더링
 
   return (
     <div>
@@ -25,9 +43,9 @@ const TodoList = () => {
         ></InputBox>
         <BtnBox>
           {isEdit ? (
-            <Btn onClick={() => editFinish(input, editId)}>수정완료</Btn>
+            <Btn onClick={() => editFinish()}>수정완료</Btn>
           ) : (
-            <Btn onClick={() => addList(input)}>추가</Btn>
+            <Btn onClick={() => addList()}>추가</Btn>
           )}
         </BtnBox>
         <ListBox>

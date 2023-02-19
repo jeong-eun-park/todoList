@@ -1,16 +1,21 @@
 import { create } from "zustand";
+import produce from "immer";
 
-const useStore = create((set) => ({
+const useStore = create((set, get) => ({
   input: "",
   setInput: (newInput) => set({ input: newInput }),
 
   inputBox: [],
-  addList: (input) => {
-    set((state) => ({
-      inputBox: [...state.inputBox, { id: state.inputBox.length, text: input }],
-    }));
+  addList: () => {
+    set(
+      produce((state) => {
+        state.inputBox.push({
+          id: state.inputBox.length,
+          text: get().input,
+        });
+      })
+    );
   },
-
   removeList: (id) => {
     set((state) => ({
       inputBox: state.inputBox.filter((list) => list.id !== id),
@@ -26,14 +31,12 @@ const useStore = create((set) => ({
       editId: id,
     }));
   },
-  editFinish: (input, editId) => {
+  editFinish: () => {
     set((state) => ({
       inputBox: state.inputBox.map((list) => {
-        if (list.id === editId) {
-          return { ...list, text: input };
-        }
-        return list;
+        return list.id === get().editId ? { ...list, text: get().input } : list;
       }),
+      isEdit: false,
     }));
   },
 }));
