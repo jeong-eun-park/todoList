@@ -1,10 +1,24 @@
 import { create } from "zustand";
 import produce from "immer";
 
-const useStore = create((set, get) => ({
+interface InputItem {
+  input: string ;
+  setInput:(newInput: string)=> void ;
+  newInput: string;
+  inputBox: {id:number, text:string}[];
+  addList:()=> void;
+  removeList:(id:number)=>void;
+  isEdit: boolean;
+  editId: string | number;
+  list: {id:number, text:string};
+  editList:(id:number)=>void;
+  editFinish: ()=>void;
+}
+
+const useStore = create<InputItem>((set, get) => ({
   input: "",
   setInput: (newInput) => set({ input: newInput }),
-
+  newInput:'',
   inputBox: [],
   addList: () => {
     set(
@@ -21,7 +35,7 @@ const useStore = create((set, get) => ({
       inputBox: state.inputBox.filter((list) => list.id !== id),
     }));
   },
-
+  list: {id:0, text:''},
   isEdit: false,
   editId: "",
   editList: (id) => {
@@ -42,3 +56,4 @@ const useStore = create((set, get) => ({
 }));
 
 export default useStore;
+

@@ -39,7 +39,7 @@ const TodoList = () => {
         <InputBox
           name="list"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e:React.ChangeEvent<HTMLInputElement>):void => setInput(e.target.value)}
         ></InputBox>
         <BtnBox>
           {isEdit ? (
@@ -54,8 +54,8 @@ const TodoList = () => {
               <div key={item.id}>
                 <List>
                   {item.text}
-                  <Btn onClick={() => editList(item.id)}>수정</Btn>
-                  <Btn onClick={() => removeList(item.id)}>삭제</Btn>
+                  <Btn onClick={():void => editList(item.id)}>수정</Btn>
+                  <Btn onClick={():void => removeList(item.id)}>삭제</Btn>
                 </List>
               </div>
             );
